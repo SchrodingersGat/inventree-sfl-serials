@@ -92,7 +92,7 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         ZZZ -> AAAA
         """
 
-        if serial is None:
+        if serial in [None, '']:
             # Provide an initial condition
             return "AAA"
 
