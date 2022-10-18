@@ -36,6 +36,7 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
 
     # Plugin metadata
     NAME = "SFL Serial"
+    AUTHOR = "Oliver Walters"
     TITLE = "SFL Serial Number Generator"
     DESCRIPTION = "Serial number generation plugin for Toronto Space Flight Labs"
     SLUG = "sflserial"

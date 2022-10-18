@@ -10,7 +10,7 @@ with open('README.md', encoding='utf-8') as f:
 
 
 setuptools.setup(
-    name="sfl-serial",
+    name="inventree-sfl-serial",
 
     version=SFL_PLUGIN_VERSION,
 
