@@ -5,8 +5,6 @@ Provides serial number generation and validation as specified by Toronto Space F
 This software is distributed under the MIT license (see LICENSE file)
 """
 
-SFL_PLUGIN_VERSION = '0.1.0'
-
 # Generic libraries
 import string
 
@@ -16,6 +14,8 @@ from django.core.exceptions import ValidationError
 # InvenTree plugin libraries
 from plugin import InvenTreePlugin
 from plugin.mixins import SettingsMixin, ValidationMixin
+
+from version import SFL_PLUGIN_VERSION
 
 
 class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):

@@ -2,7 +2,7 @@
 
 import setuptools
 
-from sflserial.sfl_serial import SFL_PLUGIN_VERSION
+from sflserial.version import SFL_PLUGIN_VERSION
 
 
 with open('README.md', encoding='utf-8') as f:
