@@ -44,7 +44,7 @@ setuptools.setup(
 
     entry_points={
         "inventree_plugins": [
-            "SFLSerialNumber = sflserial.sfl_serial:SFLSerialPlugin",
+            "SFLSerialNumber = sflserial.sfl_serial:SFLSerialNumberPlugin",
         ]
     },
 )

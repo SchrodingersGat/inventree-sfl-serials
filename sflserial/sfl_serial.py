@@ -41,6 +41,9 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     SLUG = "sflserial"
     VERSION = SFL_PLUGIN_VERSION
 
+    # InvenTree version requirements
+    MIN_VERSION = '0.9.0'
+
     # No custom settings currently, but can be expanded as required
     SETTINGS = {}
 
