@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from plugin import InvenTreePlugin
 from plugin.mixins import SettingsMixin, ValidationMixin
 
-from version import SFL_PLUGIN_VERSION
+from sflserial.version import SFL_PLUGIN_VERSION
 
 
 class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
