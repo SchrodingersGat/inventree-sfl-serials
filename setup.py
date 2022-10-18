@@ -24,7 +24,7 @@ setuptools.setup(
 
     long_description_content_type='text/markdown',
 
-    keywords="inventree label printer printing inventory",
+    keywords="inventree inventory serial numbers",
 
     url="https://github.com/inventree/inventree",
 
