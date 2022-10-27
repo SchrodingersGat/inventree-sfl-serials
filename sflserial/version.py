@@ -1,3 +1,3 @@
 """Plugin version information"""
 
-SFL_PLUGIN_VERSION = '0.1.0'
+SFL_PLUGIN_VERSION = '0.1.1'

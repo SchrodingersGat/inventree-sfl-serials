@@ -23,9 +23,10 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     
     Serial numbers should be formatted like:
 
-    - AAA
-    - AAB
-    - AAC
+    - 12B
+    - AZA
+    - AA3
+    - A7C
     - ...
     - ABA
     - ...
@@ -48,6 +49,26 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     # No custom settings currently, but can be expanded as required
     SETTINGS = {}
 
+    def valid_chars(self):
+        """Return a list of characters which can be used in this serial number schema:
+        
+        - Allow uppercase alphanumeric characters
+        - Exclude '0' and 'O' characters
+
+        This list of characters also specifies the 'increment' order
+        """
+
+        allowed = string.digits + string.ascii_uppercase
+
+        # The following characters are explicitly disallowed in the schema
+        disallowed = 'O0'
+
+        for c in disallowed:
+            idx = allowed.index(c)
+            allowed = allowed[:idx] + allowed[idx+1:]
+        
+        return allowed
+
     def validate_serial_number(self, serial: str):
         """Serial number validation routine:
         
@@ -58,29 +79,31 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         if len(serial) < 3:
             raise ValidationError("Serial number must be at least three characters")
 
+        valid = self.valid_chars()
+
         for c in serial:
-            if c not in string.ascii_uppercase:
-                raise ValidationError("Serial number can only contain characters A-Z")
+            if c not in valid:
+                raise ValidationError(f"Serial number contains prohibited character: {c}")
         
     def convert_serial_to_int(self, serial: str):
-        """Convert a serial number (string) to an integer representation.
-        
-        Essentially this serial number scheme is a "base 26" number?
-        
+        """Convert a serial number (string) to an integer representation.    
         Iterate through each character, and if we find a "weird" character, simply return None
         """
 
         num = 0
 
+        valid = self.valid_chars()
+        N = len(valid)
+
         # Reverse iterate through the serial number string
         for idx, c in enumerate(serial[::-1]):
-            if c not in string.ascii_uppercase:
+            if c not in valid:
                 # An invalid character, not sure how to continue
                 # Also, should not ever get here due to validate_serial_number routine
                 return None
 
-            c_int = ord(c) - ord('A')
-            c_int *= (26 ** idx)
+            c_int = valid.index(c) + 1
+            c_int *= (N ** idx)
 
             num += c_int
         
@@ -90,35 +113,43 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         """Find the next serial number in the required sequence
 
         e.g.
+        111 -> 112
         AAA -> AAB
-        AAZ -> ABA
+        AAZ -> AB1
+        AB9 -> ABA
+        ABZ -> AC1
         DQX -> DQY
         ZZZ -> AAAA
         """
 
+        valid = self.valid_chars()
+        N = len(valid)
+
         if serial in [None, '']:
             # Provide an initial condition
-            return "AAA"
+            return valid[0] * 3
 
         output = ''
         rollover = False
 
         for c in serial[::-1]:
             # If any character is invalid, return immediately
-            if c not in string.ascii_uppercase:
+            if c not in valid:
                 return None
             
+            idx = valid.index(c)
+
             if not rollover:
-                if c == 'Z':
-                    c = 'A'
+                if idx >= N - 1:
+                    idx = 0
                 else:
                     rollover = True
-                    c = chr(ord(c) + 1)
+                    idx += 1
             
-            output = c + output
+            output = valid[idx] + output
         
         # If we get to the end of the sequence without incrementing, add a new character
         if not rollover:
-            output = 'A' + output
+            output = valid[0] + output
         
         return output
