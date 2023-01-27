@@ -1,6 +1,6 @@
 """Custom serial number generation plugin for InvenTree
 
-Provides serial number generation and validation as specified by Toronto Space Flight Labs
+Provides hexadecimal serial number generation and validation
 
 This software is distributed under the MIT license (see LICENSE file)
 """
@@ -15,10 +15,10 @@ from django.core.exceptions import ValidationError
 from plugin import InvenTreePlugin
 from plugin.mixins import SettingsMixin, ValidationMixin
 
-from sflserial.version import SFL_PLUGIN_VERSION
+from hexserial.version import INVENTREE_HEX_PLUGIN_VERSION
 
 
-class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
+class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     """Serial number generation and validation plugin.
     
     Serial numbers should be formatted like:
@@ -36,12 +36,12 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     """
 
     # Plugin metadata
-    NAME = "SFL Serial"
+    NAME = "Hex Serials"
     AUTHOR = "Oliver Walters"
-    TITLE = "SFL Serial Number Generator"
-    DESCRIPTION = "Serial number generation plugin for Toronto Space Flight Labs"
-    SLUG = "sflserial"
-    VERSION = SFL_PLUGIN_VERSION
+    TITLE = "Hex Serial Number Generator"
+    DESCRIPTION = "Hexadecimal serial number generation plugin"
+    SLUG = "hexserial"
+    VERSION = INVENTREE_HEX_PLUGIN_VERSION
 
     # InvenTree version requirements
     MIN_VERSION = '0.9.0'
