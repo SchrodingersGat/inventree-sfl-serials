@@ -20,7 +20,7 @@ from hexserial.version import INVENTREE_HEX_PLUGIN_VERSION
 
 class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     """Serial number generation and validation plugin.
-    
+
     Serial numbers should be formatted like:
 
     - 12B
@@ -32,7 +32,7 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     - ...
     - ZZZ
     - AAAA
-    
+
     """
 
     # Plugin metadata
@@ -47,11 +47,17 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     MIN_VERSION = '0.9.0'
 
     # No custom settings currently, but can be expanded as required
-    SETTINGS = {}
+    SETTINGS = {
+        'DISALLOWED_CHARS': {
+            'name': 'Disallowed characters',
+            'description': 'Specify any characters which are disallowed in this scheme',
+            'default': '',
+        }
+    }
 
     def valid_chars(self):
-        """Return a list of characters which can be used in this serial number schema:
-        
+        """Return a list of characters which can be used in this schema:
+
         - Allow uppercase alphanumeric characters
         - Exclude '0' and 'O' characters
 
@@ -61,12 +67,12 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         allowed = string.digits + string.ascii_uppercase
 
         # The following characters are explicitly disallowed in the schema
-        disallowed = 'O0'
+        disallowed = self.get_setting('DISALLOWED_CHARS', '')
 
         for c in disallowed:
             idx = allowed.index(c)
             allowed = allowed[:idx] + allowed[idx+1:]
-        
+
         return allowed
 
     def validate_serial_number(self, serial: str):
