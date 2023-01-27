@@ -71,7 +71,7 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
 
         for c in disallowed:
             idx = allowed.index(c)
-            allowed = allowed[:idx] + allowed[idx+1:]
+            allowed = allowed[:idx] + allowed[idx + 1:]
 
         return allowed
 
@@ -92,14 +92,14 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
                 raise ValidationError(f"Serial number contains prohibited character: {c}")
         
     def convert_serial_to_int(self, serial: str):
-        """Convert a serial number (string) to an integer representation.    
+        """Convert a serial number (string) to an integer representation.
         Iterate through each character, and if we find a "weird" character, simply return None
         """
 
         num = 0
 
         valid = self.valid_chars()
-        N = len(valid)
+        n = len(valid)
 
         # Reverse iterate through the serial number string
         for idx, c in enumerate(serial[::-1]):
@@ -109,7 +109,7 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
                 return None
 
             c_int = valid.index(c) + 1
-            c_int *= (N ** idx)
+            c_int *= (n ** idx)
 
             num += c_int
         
