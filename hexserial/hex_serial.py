@@ -129,7 +129,7 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         """
 
         valid = self.valid_chars()
-        N = len(valid)
+        n = len(valid)
 
         if serial in [None, '']:
             # Provide an initial condition
@@ -146,7 +146,7 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
             idx = valid.index(c)
 
             if not rollover:
-                if idx >= N - 1:
+                if idx >= n - 1:
                     idx = 0
                 else:
                     rollover = True
