@@ -10,7 +10,7 @@ with open('README.md', encoding='utf-8') as f:
 
 
 setuptools.setup(
-    name="inventree-hex-serial",
+    name="inventree-hex-serials",
 
     version=INVENTREE_HEX_PLUGIN_VERSION,
 
@@ -26,7 +26,7 @@ setuptools.setup(
 
     keywords="inventree inventory serial numbers",
 
-    url="https://github.com/inventree/inventree",
+    url="https://github.com/SchrodingersGat/inventree-hex-serials/",
 
     license="MIT",
 
@@ -44,7 +44,7 @@ setuptools.setup(
 
     entry_points={
         "inventree_plugins": [
-            "HexSerialNumber = hexserial.hex_serial:HexSerialNumberPlugin",
+            "HexSerialNumbers = hexserial.hex_serial:HexSerialNumberPlugin",
         ]
     },
 )
