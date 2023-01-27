@@ -40,7 +40,7 @@ setuptools.setup(
         "twine",
     ],
 
-    python_requires=">=3.7",
+    python_requires=">=3.8",
 
     entry_points={
         "inventree_plugins": [

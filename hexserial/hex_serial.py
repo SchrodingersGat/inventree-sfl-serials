@@ -59,7 +59,7 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         """Return a list of characters which can be used in this schema:
 
         - Allow uppercase alphanumeric characters
-        - Exclude '0' and 'O' characters
+        - Exclude any custom characters as specified by the user
 
         This list of characters also specifies the 'increment' order
         """
@@ -67,7 +67,7 @@ class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         allowed = string.digits + string.ascii_uppercase
 
         # The following characters are explicitly disallowed in the schema
-        disallowed = self.get_setting('DISALLOWED_CHARS', '')
+        disallowed = str(self.get_setting('DISALLOWED_CHARS'))
 
         for c in disallowed:
             idx = allowed.index(c)
