@@ -1,6 +1,6 @@
 """Custom serial number generation plugin for InvenTree
 
-Provides serial number generation and validation as specified by Toronto Space Flight Labs
+Provides hexadecimal serial number generation and validation
 
 This software is distributed under the MIT license (see LICENSE file)
 """
@@ -15,12 +15,12 @@ from django.core.exceptions import ValidationError
 from plugin import InvenTreePlugin
 from plugin.mixins import SettingsMixin, ValidationMixin
 
-from sflserial.version import SFL_PLUGIN_VERSION
+from hexserial.version import INVENTREE_HEX_PLUGIN_VERSION
 
 
-class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
+class HexSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     """Serial number generation and validation plugin.
-    
+
     Serial numbers should be formatted like:
 
     - 12B
@@ -32,28 +32,34 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
     - ...
     - ZZZ
     - AAAA
-    
+
     """
 
     # Plugin metadata
-    NAME = "SFL Serial"
+    NAME = "Hex Serials"
     AUTHOR = "Oliver Walters"
-    TITLE = "SFL Serial Number Generator"
-    DESCRIPTION = "Serial number generation plugin for Toronto Space Flight Labs"
-    SLUG = "sflserial"
-    VERSION = SFL_PLUGIN_VERSION
+    TITLE = "Hex Serial Number Generator"
+    DESCRIPTION = "Hexadecimal serial number generation plugin"
+    SLUG = "hexserial"
+    VERSION = INVENTREE_HEX_PLUGIN_VERSION
 
     # InvenTree version requirements
     MIN_VERSION = '0.9.0'
 
     # No custom settings currently, but can be expanded as required
-    SETTINGS = {}
+    SETTINGS = {
+        'DISALLOWED_CHARS': {
+            'name': 'Disallowed characters',
+            'description': 'Specify any characters which are disallowed in this scheme',
+            'default': '',
+        }
+    }
 
     def valid_chars(self):
-        """Return a list of characters which can be used in this serial number schema:
-        
+        """Return a list of characters which can be used in this schema:
+
         - Allow uppercase alphanumeric characters
-        - Exclude '0' and 'O' characters
+        - Exclude any custom characters as specified by the user
 
         This list of characters also specifies the 'increment' order
         """
@@ -61,12 +67,12 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         allowed = string.digits + string.ascii_uppercase
 
         # The following characters are explicitly disallowed in the schema
-        disallowed = 'O0'
+        disallowed = str(self.get_setting('DISALLOWED_CHARS'))
 
         for c in disallowed:
             idx = allowed.index(c)
-            allowed = allowed[:idx] + allowed[idx+1:]
-        
+            allowed = allowed[:idx] + allowed[idx + 1:]
+
         return allowed
 
     def validate_serial_number(self, serial: str):
@@ -86,14 +92,14 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
                 raise ValidationError(f"Serial number contains prohibited character: {c}")
         
     def convert_serial_to_int(self, serial: str):
-        """Convert a serial number (string) to an integer representation.    
+        """Convert a serial number (string) to an integer representation.
         Iterate through each character, and if we find a "weird" character, simply return None
         """
 
         num = 0
 
         valid = self.valid_chars()
-        N = len(valid)
+        n = len(valid)
 
         # Reverse iterate through the serial number string
         for idx, c in enumerate(serial[::-1]):
@@ -103,7 +109,7 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
                 return None
 
             c_int = valid.index(c) + 1
-            c_int *= (N ** idx)
+            c_int *= (n ** idx)
 
             num += c_int
         
@@ -123,7 +129,7 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
         """
 
         valid = self.valid_chars()
-        N = len(valid)
+        n = len(valid)
 
         if serial in [None, '']:
             # Provide an initial condition
@@ -140,7 +146,7 @@ class SFLSerialNumberPlugin(SettingsMixin, ValidationMixin, InvenTreePlugin):
             idx = valid.index(c)
 
             if not rollover:
-                if idx >= N - 1:
+                if idx >= n - 1:
                     idx = 0
                 else:
                     rollover = True
