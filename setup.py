@@ -47,4 +47,9 @@ setuptools.setup(
             "SFLSerialNumber = sflserial.sfl_serial:SFLSerialNumberPlugin",
         ]
     },
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "Operating System :: OS Independent",
+        "Framework :: InvenTree",
+    ],
 )
